@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script type="text/javascript">
+//지금까지 사용해왔던 동기방식으로, 서버에 데이터를 요청해보기
+function syncSend(){
+	location.href="/test/result.jsp";
+}
+
+//비동기 방식의 목적은 화면 전체 대체가 아니라, 화면의 일부의 변경이다.
+//따라서 서버로부터 전체 .HTML을 받아올 필요가 없다. 즉 일부데이터만 가져오면 된다
+//체계적이고 구조적이면서 복잡한 데이터의 경우 XML, JSON
+let Xhttp;
+function asyncSend(){
+	
+	//비동기 통신 객체(통신시 백그라운드로 동작이 가능)
+	xhttp=new XMLHttpRequest();	
+	
+	//비동기 통신객체의 현재 통신 상태 중, 응답이 도착하고, 그 응답이 서버의 성공적인 
+	//응답인 경우 개발자가 하고싶은 작업을 하면 되는데, 하고싶은 작업이란 거의 HTML문서
+	//일부를 변경하는 것이다. 즉 UI의 일부를 변경하는 것임
+	xhttp.onreadystatechange=function(){
+		if(this.readyState==4 && this.status==200){
+			//alert(this.responseText);
+			document.querySelector("h1").innerText=this.responseText;
+		}
+	}
+	
+	xhttp.open("GET", "/test/result2.jsp", true);
+	xhttp.send(); //비동기 통신 시작!! (요청시작)
+}
+
+//Ajax의 XMLHttpRequest 객체를 직접 다루는 것은 효율성이 떨어지므로,
+//비동기통신 코드를 아주 단순화 시켜놓은 JQuery가 지원하는 Ajax를 가리켜
+//JQuery Ajax라 하며, 이 기능을 주로 활용 많이함
+function send(){
+	$.ajax({
+		url:"/test/result2.jsp",
+		type:"GET",
+		success:function(result, status, xhr){
+			document.querySelector("h1").innerText=result;
+		}
+	});
+	
+}
+</script>
+</head>
+<body>
+	<button onClick="syncSend()">동기</button>
+	<button onClick="asyncSend()">비동기</button>
+	<button onClick="Send()">JQuery Ajax이용</button>
+	
+	<h1></h1>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
